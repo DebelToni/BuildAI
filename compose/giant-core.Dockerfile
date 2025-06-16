@@ -35,7 +35,7 @@ RUN mkdir /var/run/sshd && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/'  /etc/ssh/sshd_config
 
-COPY SUPER_GIANT/giant-training/id_rsa.pub /root/.ssh/authorized_keys
+COPY SUPER-GIANT/giant-training/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
 
 EXPOSE 22
