@@ -23,7 +23,7 @@ ENV PATH="$VENV_DIR/bin:$PATH" \
     VIRTUAL_ENV=$VENV_DIR
 
 # ── Python dependencies (from repo’s requirements.txt) ──────────────────────────
-COPY requirements.txt /tmp/requirements.txt
+COPY SUPER-GIANT/requirements.txt /tmp/requirements.txt
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r /tmp/requirements.txt
 # clean up
@@ -35,14 +35,14 @@ RUN mkdir /var/run/sshd && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/'  /etc/ssh/sshd_config
 
-COPY giant-training/id_rsa.pub /root/.ssh/authorized_keys
+COPY SUPER_GIANT/giant-training/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
 
 EXPOSE 22
 
 # ── Project workspace ───────────────────────────────────────────────────────────
 WORKDIR /workspace/SUPER-GIANT
-COPY . /workspace/SUPER-GIANT
+COPY ./SUPER-GIANT /workspace/SUPER-GIANT
 
 # ── Entrypoint ──────────────────────────────────────────────────────────────────
 # Starts the SSH daemon in the foreground.
