@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  lada:
+    build:
+      context: .
+      dockerfile: compose/lada.Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./LADA:/app/LADA:ro        # hot-reload local dev, remove in prod
+    environment:
+      - OLLAMA_MODEL=phi3
+
+  giant-core:
+    build:
+      context: .
+      dockerfile: compose/giant-core.Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    ports:
+      - "8000:8000"
+    environment:
+      - JAX_PLATFORM_NAME=gpu
+      - CUDA_VISIBLE_DEVICES=0
+
+  giant-ui:
+    build:
+      context: .
+      dockerfile: compose/giant-ui.Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - GIANT_API=http://giant-core:8000
+
+  # optional reverse-proxy so users hit :80 and :443
+  proxy:
+    image: nginx:alpine
+    volumes:
+      - ./compose/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on: [lada, giant-ui]
+
