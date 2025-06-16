@@ -24,6 +24,7 @@ ENV PATH="$VENV_DIR/bin:$PATH" \
 
 # ── Python dependencies (from repo’s requirements.txt) ──────────────────────────
 COPY SUPER-GIANT/requirements.txt /tmp/requirements.txt
+RUN ls -l /tmp && cat /tmp/requirements.txt
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r /tmp/requirements.txt
 # clean up
