@@ -1,0 +1,6 @@
+[submodule "LADA"]
+	path = LADA
+	url = https://github.com/aibatko/LADA
+[submodule "SUPER-GIANT"]
+	path = SUPER-GIANT
+	url = https://github.com/DebelToni/SUPER-GIANT
