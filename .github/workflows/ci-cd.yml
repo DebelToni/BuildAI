@@ -110,6 +110,7 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
+          progress: plain
           tags: |
             ${{ env.IMAGE_PREFIX }}:${{ matrix.name }}-${{ env.TAG }}
             ${{ env.IMAGE_PREFIX }}:${{ matrix.name }}-latest
