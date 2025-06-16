@@ -3,7 +3,7 @@
 # CUDA 12.9 + cuDNN + Python 3.11 + JAX
 # with OpenSSH server (root / key-only)
 # ────────────────────────────────────────────────────────────────────────────────
-FROM nvidia/cuda:12.9.0-cudnn-devel-ubuntu22.04
+FROM nvidia/cuda:12.9.0-cudnn-runtime-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
