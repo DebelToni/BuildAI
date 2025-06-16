@@ -1,68 +1,116 @@
-name: Build-AI CI/CD
+# name: Build-AI CI/CD
+#
+# on:
+#   push:
+#     branches: [Production]       # only Production triggers
+#   pull_request:
+#     branches: [Production]
+#
+# env:
+#   REGISTRY: ghcr.io
+#   IMAGE_PREFIX: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+#
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#         with: 
+#           submodules: true
+#       - uses: actions/setup-python@v5
+#         with: 
+#           python-version: '3.11'
+#       - name: Install deps
+#         run: pip install -r LADA/requirements.txt -r SUPER-GIANT/requirements.txt pytest
+#       - name: Run unit tests
+#         run: pytest
+#
+#   build-and-push:
+#     needs: test
+#     runs-on: ubuntu-latest
+#     permissions:
+#       packages: write
+#       contents: read
+#     strategy:
+#       matrix:
+#         include:
+#           - name: lada
+#             path: compose
+#             file: compose/lada.Dockerfile
+#             tag: lada
+#           - name: giant-core
+#             path: compose
+#             file: compose/giant-core.Dockerfile
+#             tag: giant-core
+#           - name: giant-ui
+#             path: compose
+#             file: compose/giant-ui.Dockerfile
+#             tag: giant-ui
+#     steps:
+#       - uses: actions/checkout@v4
+#         with: 
+#           submodules: true
+#       - name: Set up QEMU & Buildx
+#         uses: docker/setup-buildx-action@v3
+#       - name: Login to GHCR
+#         uses: docker/login-action@v3
+#         with:
+#           registry: ${{ env.REGISTRY }}
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Build & push ${{ matrix.name }}
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: ${{ matrix.path }}
+#           file: ${{ matrix.file }}
+#           push: true
+#           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:${{ matrix.tag }}-${{ github.sha }}
+name: Build and publish images
 
 on:
   push:
-    branches: [Production]       # only Production triggers
-  pull_request:
     branches: [Production]
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_PREFIX: ${{ github.repository_owner }}/${{ github.event.repository.name }}
+  REGISTRY: docker.io
+  IMAGE_PREFIX: ${{ secrets.DOCKERHUB_USERNAME }}/build-ai
+  TAG: ${{ github.sha }}           # or use semver / date tags
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with: 
-          submodules: true
-      - uses: actions/setup-python@v5
-        with: 
-          python-version: '3.11'
-      - name: Install deps
-        run: pip install -r LADA/requirements.txt -r SUPER-GIANT/requirements.txt pytest
-      - name: Run unit tests
-        run: pytest
-
-  build-and-push:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
     strategy:
       matrix:
         include:
           - name: lada
-            path: compose
             file: compose/lada.Dockerfile
-            tag: lada
+            context: .
           - name: giant-core
-            path: compose
             file: compose/giant-core.Dockerfile
-            tag: giant-core
+            context: .
           - name: giant-ui
-            path: compose
             file: compose/giant-ui.Dockerfile
-            tag: giant-ui
+            context: .
     steps:
       - uses: actions/checkout@v4
         with: 
           submodules: true
-      - name: Set up QEMU & Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Login to GHCR
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build & push ${{ matrix.name }}
         uses: docker/build-push-action@v5
         with:
-          context: ${{ matrix.path }}
+          context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:${{ matrix.tag }}-${{ github.sha }}
+          tags: |
+            ${{ env.IMAGE_PREFIX }}:${{ matrix.name }}-${{ env.TAG }}
+            ${{ env.IMAGE_PREFIX }}:${{ matrix.name }}-latest
 
