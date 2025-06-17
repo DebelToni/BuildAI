@@ -20,5 +20,4 @@ ENV GIANT_API=http://localhost:8000
 
 EXPOSE 5001
 
-# One-liner: gunicorn, 2 workers, binds 0.0.0.0:5001
-CMD ["python", "ui/app.py"]
+CMD ["python", "SUPER-GIANT/ui/app.py"]
