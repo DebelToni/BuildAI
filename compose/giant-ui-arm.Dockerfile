@@ -1,23 +1,36 @@
 # ────────────────────────────────────────────────────────────────
-# GIANT-UI container for MACOS
+# GIANT-UI container
+# Python 3.11 on Debian slim, ARM64 and AMD64 compatible
 # ────────────────────────────────────────────────────────────────
-FROM --platform=linux/arm64 python:3.11-slim
+FROM --platform=linux/arm64,linux/amd64 python:3.11-slim
 
-# System deps (none, but keep layer for later)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
 
-# ── Python layer ────────────────────────────────────────────────
-WORKDIR /app
-COPY SUPER-GIANT/UI/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# ── System packages ─────────────────────────────────────────────
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+        dumb-init \
+ && rm -rf /var/lib/apt/lists/*
 
-# ── App code ────────────────────────────────────────────────────
+# ── Create and use workspace ────────────────────────────────────
+WORKDIR /workspace/SUPER-GIANT/UI
+
+# ── Python dependencies ─────────────────────────────────────────
+# Copy just requirements first to leverage Docker cache
+COPY SUPER-GIANT/UI/requirements.txt ./requirements.txt
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
+
+# ── Application code ────────────────────────────────────────────
 COPY SUPER-GIANT/UI/ .
 
-# Default target if the caller forgets to provide one
+# ── Runtime configuration ───────────────────────────────────────
+# Points your UI at the CORE API by default; override at runtime if needed
 ENV GIANT_API=http://localhost:8000
 
 EXPOSE 5001
 
-CMD ["python", "SUPER-GIANT/ui/app.py"]
+# ── Entrypoint & CMD ────────────────────────────────────────────
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["python", "app.py"]
+
