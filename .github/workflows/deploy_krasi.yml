@@ -1,0 +1,16 @@
+  # deploy-giant-core:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy with SSH
+  #       uses: appleboy/ssh-action@v1.0.3
+  #       with:
+  #         host: ${{ secrets.SSH_HOST }}
+  #         username: ${{ secrets.SSH_USER }}
+  #         key: ${{ secrets.SSH_KEY }}
+  #         script: |
+  #           docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+  #           docker pull ${{ env.IMAGE_PREFIX }}:giant-core-${{ env.TAG }}
+  #           docker stop giant-core || true && docker rm giant-core || true
+  #           docker run -d --gpus all --name giant-core \
+  #             -p 8000:8000 ${{ env.IMAGE_PREFIX }}:giant-core-${{ env.TAG }}
