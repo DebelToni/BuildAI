@@ -2,7 +2,7 @@
 # GIANT-UI container
 # Python 3.11 on Debian slim, ARM64 and AMD64 compatible
 # ────────────────────────────────────────────────────────────────
-FROM --platform=linux/arm64,linux/amd64 python:3.11-slim
+FROM --platform=linux/arm64 python:3.11-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
