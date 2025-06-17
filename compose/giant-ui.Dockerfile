@@ -1,23 +1,35 @@
 # ────────────────────────────────────────────────────────────────
-# GIANT-UI container
+# GIANT-UI container (non-ARM)
+# Python 3.11 on Debian slim
 # ────────────────────────────────────────────────────────────────
 FROM python:3.11-slim
 
-# System deps (none, but keep layer for later)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
 
-# ── Python layer ────────────────────────────────────────────────
-WORKDIR /app
-COPY SUPER-GIANT/UI/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# ── System packages ─────────────────────────────────────────────
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+        dumb-init \
+ && rm -rf /var/lib/apt/lists/*
 
-# ── App code ────────────────────────────────────────────────────
+# ── Create and use workspace ────────────────────────────────────
+WORKDIR /workspace/SUPER-GIANT/UI
+
+# ── Python dependencies ─────────────────────────────────────────
+# Copy requirements first to leverage Docker cache
+COPY SUPER-GIANT/UI/requirements.txt ./requirements.txt
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
+
+# ── Application code ────────────────────────────────────────────
 COPY SUPER-GIANT/UI/ .
 
-# Default target if the caller forgets to provide one
+# ── Runtime configuration ───────────────────────────────────────
 ENV GIANT_API=http://localhost:8000
 
 EXPOSE 5001
 
-CMD ["python", "SUPER-GIANT/ui/app.py"]
+# ── Entrypoint & CMD ────────────────────────────────────────────
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["python", "app.py"]
+
