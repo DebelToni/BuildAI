@@ -85,6 +85,9 @@ jobs:
           - name: lada
             file: compose/lada.Dockerfile
             context: .
+          - name: lada-arm
+            file: compose/lada-arm.Dockerfile
+            context: .
           - name: giant-core
             file: compose/giant-core.Dockerfile
             context: .
