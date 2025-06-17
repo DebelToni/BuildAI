@@ -1,0 +1,4 @@
+services:
+  giant-ui:
+    environment:
+      - GIANT_API=http://172.22.152.3:8000

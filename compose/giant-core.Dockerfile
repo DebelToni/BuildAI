@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libssl-dev zlib1g-dev libbz2-dev libreadline-dev             \
         libsqlite3-dev libffi-dev liblzma-dev tk-dev uuid-dev        \
         openssh-server                                               \
+		dumb-init \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Python virtual environment ──────────────────────────────────────────────────
@@ -40,6 +41,8 @@ COPY SUPER-GIANT/giant-training/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
 
 EXPOSE 22
+# ── ENTRYPOINT + CMD ─────────────────────────────────────────────────
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # ── Project workspace ───────────────────────────────────────────────────────────
 WORKDIR /workspace/SUPER-GIANT
@@ -48,5 +51,8 @@ COPY ./SUPER-GIANT /workspace/SUPER-GIANT
 # ── Entrypoint ──────────────────────────────────────────────────────────────────
 # Starts the SSH daemon in the foreground.
 # Override in docker-compose or `docker run … CMD` if you want to launch training
-CMD ["/usr/sbin/sshd","-D"]
+# CMD ["/usr/sbin/sshd","-D"]
 
+CMD ["/bin/bash", "-c", "\
+      /usr/sbin/sshd; \
+      python server/app.py"]
