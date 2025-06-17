@@ -91,6 +91,9 @@ jobs:
           - name: giant-ui
             file: compose/giant-ui.Dockerfile
             context: .
+          - name: giant-ui-arm
+            file: compose/giant-ui-arm.Dockerfile
+            context: .
     steps:
       - uses: actions/checkout@v4
         with: 
