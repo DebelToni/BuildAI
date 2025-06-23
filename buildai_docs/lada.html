@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lada – BuildAI Docs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;padding:0;
+  line-height:1.6;
+  background:#f8f9fa;
+  color:#212529;
+}
+header{
+  background:#343a40;
+  color:#fff;
+  padding:1rem;
+}
+footer{
+  background:#343a40;
+  color:#fff;
+  text-align:center;
+  padding:1rem;
+  margin-top:2rem;
+}
+.nav{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+}
+.nav li{
+  margin-right:1rem;
+}
+.nav a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.nav a:hover{
+  text-decoration:underline;
+}
+main{
+  padding:2rem;
+  max-width:960px;
+  margin:auto;
+  background:#fff;
+  box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
+pre{
+  background:#f1f3f5;
+  padding:1rem;
+  overflow-x:auto;
+}
+code{
+  font-family: Consolas,monospace;
+}
+h1,h2,h3{
+  color:#343a40;
+}
+</style>
+
+</head>
+<body>
+<header>
+<h1>BuildAI Documentation</h1>
+
+<nav>
+  <ul class="nav">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="super-giant.html">SUPER‑GIANT</a></li>
+    <li><a href="lada.html">LADA</a></li>
+    <li><a href="deployment.html">Deployment</a></li>
+    <li><a href="usage.html">Usage</a></li>
+    <li><a href="api.html">API</a></li>
+    <li><a href="contributing.html">Contributing</a></li>
+  </ul>
+</nav>
+
+</header>
+<main>
+
+<h2>LADA – Local AI Developer Assistant</h2>
+
+<p>LADA is a Flask service that turns a local (or remote) LLM into a pair‑programmer à la Claude Code or OpenAI Codex – <em>but with zero cloud dependency</em>. Everything runs on your own GPU / CPU, so your code never leaves the machine.</p>
+
+<h3>High‑level Workflow</h3>
+<ol>
+  <li>The browser UI shows two panels: <strong>Chat</strong> and an optional <strong>Terminal</strong>.</li>
+  <li>Every user message is first read by a lightweight <em>router</em> model which decides whether the request is trivial or needs heavy reasoning.</li>
+  <li>Simple requests are answered directly by a <em>coder</em> model (faster, cheaper).</li>
+  <li>For complex instructions the router forwards the full history to the <em>Orchestrator</em> model.<br>
+      The Orchestrator can:
+      <ul>
+        <li>Break the task into atomic subtasks (<em>planning</em>).</li>
+        <li>Spawn multiple coder instances that work in parallel.</li>
+        <li>Iterate until all subtasks are solved, then merge the results.</li>
+      </ul>
+  </li>
+  <li>Both coder and orchestrator can be swapped between providers:
+    <ul>
+      <li>Any Ollama‑hosted model (<code>llama3</code>, <code>phi3</code>, etc.)</li>
+      <li>Or remote OpenAI models such as <code>gpt‑4o</code> (handy fallback).</li>
+    </ul></li>
+</ol>
+
+<h3>Server Anatomy</h3>
+<pre><code>LADA/
+├─ app.py            # 400+ LOC – the single Flask application
+├─ static/           # JS &amp; CSS assets for the frontend
+└─ templates/        # Jinja2 templates (chat, terminal, layout)
+</code></pre>
+
+<p>The bulk of the logic lives in <code>app.py</code> – it multiplexes requests to models, streams partial responses back to the browser via Server‑Sent Events, and proxies shell commands when the user toggles the terminal.</p>
+
+</main>
+<footer>
+BuildAI Documentation – generated 2025-06-17
+</footer>
+</body>
+</html>
