@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Super-giant – BuildAI Docs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;padding:0;
+  line-height:1.6;
+  background:#f8f9fa;
+  color:#212529;
+}
+header{
+  background:#343a40;
+  color:#fff;
+  padding:1rem;
+}
+footer{
+  background:#343a40;
+  color:#fff;
+  text-align:center;
+  padding:1rem;
+  margin-top:2rem;
+}
+.nav{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+}
+.nav li{
+  margin-right:1rem;
+}
+.nav a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.nav a:hover{
+  text-decoration:underline;
+}
+main{
+  padding:2rem;
+  max-width:960px;
+  margin:auto;
+  background:#fff;
+  box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
+pre{
+  background:#f1f3f5;
+  padding:1rem;
+  overflow-x:auto;
+}
+code{
+  font-family: Consolas,monospace;
+}
+h1,h2,h3{
+  color:#343a40;
+}
+</style>
+
+</head>
+<body>
+<header>
+<h1>BuildAI Documentation</h1>
+
+<nav>
+  <ul class="nav">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="super-giant.html">SUPER‑GIANT</a></li>
+    <li><a href="lada.html">LADA</a></li>
+    <li><a href="deployment.html">Deployment</a></li>
+    <li><a href="usage.html">Usage</a></li>
+    <li><a href="api.html">API</a></li>
+    <li><a href="contributing.html">Contributing</a></li>
+  </ul>
+</nav>
+
+</header>
+<main>
+
+<h2>SUPER‑GIANT</h2>
+
+<p>SUPER‑GIANT is a purpose‑built, decoder‑only transformer written in <strong>JAX</strong>. Version 1 (the current stable branch) focuses on speed and research‑friendliness rather than massive scale.</p>
+
+<h3>Key Features</h3>
+<ul>
+<li><strong>Flash Attention</strong> implemented with the cuDNN 12 primitives wrapped for JAX.</li>
+<li><strong>Full‑dimensional KV cache</strong> for low‑latency autoregressive inference (plans for low‑rank cache reconstruction à la DeepSeek MLA are tracked for v2).</li>
+<li>Optax‑based training loop with built‑in gradient accumulation and mixed precision.</li>
+<li>Self‑contained <code>train.py</code>, <code>generate.py</code>, and <code>prepare_dataset.py</code> scripts – each exposes a rich <code>--help</code>.</li>
+<li>Synthetic‑data pipeline that can query OpenAI endpoints <em>or</em> any local model that speaks the OpenAI API spec (e.g. <a href="https://ollama.ai">Ollama</a>).</li>
+<li>Optional Flask‑based <em>server / ui</em> pair so you can talk to the model from a browser instead of SSH.</li>
+</ul>
+
+<h3>Directory Layout (v1)</h3>
+<pre><code>v1/
+├─ model/                # Core model definition (Flax Module), loss &amp; train loop helpers
+├─ data/                 # Synthetic‑data generation pipeline
+├─ server/               # REST + WebSocket gateway, GPU‑bound
+├─ ui/                   # Simple React SPA talking to <code>server/</code>
+└─ terra/                # Thin Terraform wrapper for <a href="https://runpod.io">RunPod</a> GPU nodes
+</code></pre>
+
+<h3>Example: Start a small training run</h3>
+<pre><code>python -m v1.model.train \
+  --dataset=./data/tiny_stories.jsonl \
+  --model_dim=512 \
+  --n_layers=8 \
+  --n_heads=8 \
+  --save_dir=./checkpoints/run1 \
+  --max_steps=100_000
+</code></pre>
+
+<h3>Example: Generate text with a checkpoint</h3>
+<pre><code>python -m v1.model.generate \
+  --ckpt=./checkpoints/run1/step_100000 \
+  --prompt="One sunny day," \
+  --max_tokens=200
+</code></pre>
+
+<p>The <code>v0/</code> folder contains the very first prototype and is kept for posterity; you probably only want to look at <code>v1/</code> unless you are interested in how the architecture evolved. Planned experimental branches (e.g. <em>v2‑moe</em>) live side‑by‑side.</p>
+
+</main>
+<footer>
+BuildAI Documentation – generated 2025-06-17
+</footer>
+</body>
+</html>
