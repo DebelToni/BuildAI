@@ -1,0 +1,26 @@
+{
+  "name": "buildai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DebelToni/BuildAI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DebelToni/BuildAI/issues"
+  },
+  "homepage": "https://github.com/DebelToni/BuildAI#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "openai": "^5.7.0",
+    "zod": "^3.25.67",
+    "zod-to-json-schema": "^3.24.5"
+  }
+}

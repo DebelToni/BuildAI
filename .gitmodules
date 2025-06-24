@@ -4,3 +4,4 @@
 [submodule "SUPER-GIANT"]
 	path = SUPER-GIANT
 	url = https://github.com/DebelToni/SUPER-GIANT
+	branch = approved
