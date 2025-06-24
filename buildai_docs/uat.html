@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Uat – BuildAI Docs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;padding:0;
+  line-height:1.6;
+  background:#f8f9fa;
+  color:#212529;
+}
+header{
+  background:#343a40;
+  color:#fff;
+  padding:1rem;
+}
+footer{
+  background:#343a40;
+  color:#fff;
+  text-align:center;
+  padding:1rem;
+  margin-top:2rem;
+}
+.nav{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+}
+.nav li{
+  margin-right:1rem;
+}
+.nav a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.nav a:hover{
+  text-decoration:underline;
+}
+main{
+  padding:2rem;
+  max-width:960px;
+  margin:auto;
+  background:#fff;
+  box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
+pre{
+  background:#f1f3f5;
+  padding:1rem;
+  overflow-x:auto;
+}
+code{
+  font-family: Consolas,monospace;
+}
+h1,h2,h3{
+  color:#343a40;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border:1px solid #dee2e6;
+  padding:0.5rem;
+  text-align:left;
+}
+thead{
+  background:#e9ecef;
+}
+</style>
+
+</head>
+<body>
+<header>
+<h1>BuildAI Documentation</h1>
+
+<nav>
+  <ul class="nav">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="super-giant.html">SUPER‑GIANT</a></li>
+    <li><a href="lada.html">LADA</a></li>
+    <li><a href="deployment.html">Deployment</a></li>
+    <li><a href="usage.html">Usage</a></li>
+    <li><a href="api.html">API</a></li>
+    <li><a href="uat.html">UAT Examples</a></li>
+    <li><a href="user-stories.html">User Stories</a></li>
+    <li><a href="contributing.html">Contributing</a></li>
+  </ul>
+</nav>
+
+</header>
+<main>
+
+<h2>User Acceptance Testing (UAT) Examples</h2>
+
+<p>This page lists high‑level scenarios a stakeholder can walk through to confirm that BuildAI behaves as expected. Each scenario is phrased in Given/When/Then form and maps back to one or more <a href="user-stories.html">User Stories</a>.</p>
+
+<table>
+<thead><tr><th>#</th><th>Scenario</th><th>Acceptance Criteria</th></tr></thead>
+<tbody>
+<tr><td>UAT‑01</td><td><strong>Generate text with a trained checkpoint</strong><br>
+<em>Given</em> a SUPER‑GIANT checkpoint on disk<br>
+<em>When</em> I run <code>generate.py</code> with a prompt<br>
+<em>Then</em> I receive a non‑empty completion within 3 seconds</td>
+<td>
+<ul>
+<li>Exit code 0</li>
+<li>Stdout contains at least one token beyond the prompt</li>
+<li>Total latency ≤ 3 s on an A100‑40G</li>
+</ul></td></tr>
+
+<tr><td>UAT‑02</td><td><strong>End‑to‑end chat with LADA using local models</strong><br>
+<em>Given</em> Ollama is running <code>llama3</code><br>
+<em>When</em> I open <code>/chat</code> and ask “Explain quicksort in Python”<br>
+<em>Then</em> I receive a code answer in under 10 seconds</td>
+<td>
+<ul>
+<li>Router selects coder backend = <code>ollama:llama3</code></li>
+<li>Response includes a fenced Python block</li>
+<li>Token stream starts ≤ 5 s after send</li>
+</ul></td></tr>
+
+<tr><td>UAT‑03</td><td><strong>Orchestrator planning flow</strong><br>
+<em>Given</em> orchestration is turned ON<br>
+<em>When</em> I ask “Build a Flask CRUD app”<br>
+<em>Then</em> router forwards to orchestrator; orchestrator spawns ≥1 coder; final answer aggregates code files</td>
+<td>
+<ul>
+<li>Server logs show <code>orchestrator → spawn coder</code></li>
+<li>UI shows progressive planning steps</li>
+<li>Final zip bundle is offered for download</li>
+</ul></td></tr>
+
+<tr><td>UAT‑04</td><td><strong>Cloud deployment on RunPod</strong><br>
+<em>Given</em> I run <code>./deploy-runpod.sh</code> with valid API key<br>
+<em>When</em> Terraform finishes<br>
+<em>Then</em> the public endpoint returns 200 for <code>/health</code></td>
+<td>
+<ul>
+<li>Terraform exit code 0</li>
+<li>Remote <code>/health</code> returns JSON <code>{"status":"ok"}</code></li>
+<li>CUDA visible devices ≥ 1</li>
+</ul></td></tr>
+
+</tbody>
+</table>
+
+</main>
+<footer>
+BuildAI Documentation – generated 2025-06-24
+</footer>
+</body>
+</html>
