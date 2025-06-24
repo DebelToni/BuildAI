@@ -22,28 +22,28 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 
     /* ---------------- define the allowed reply shape --- */
     const Verdict = z.object({
-      verdict: z.enum(['PASS', 'FAIL'])
+      verdict:  z.enum(['PASS', 'FAIL']),
+      feedback: z.string().optional()   // explanation when verdict === "FAIL"
     }).strict();
 
-    // Build a “function-style” schema: name + schema
     const jsonSchema = {
-      name: 'ai_review_verdict',
-      description: 'PASS if diff looks safe, otherwise FAIL.',
-      schema: zodToJsonSchema(Verdict)          // type/object/properties/required
+      name:        'ai_review_verdict',
+      description: 'Return PASS if the diff looks safe; otherwise FAIL and explain why in "feedback".',
+      schema:      zodToJsonSchema(Verdict)
     };
 
     /* ---------------- call OpenAI ---------------------- */
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     const resp = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-4o-mini',               // latest lightweight model (Jun 2025)
       temperature: 0,
       messages: [
         {
           role: 'system',
           content:
             'You are a meticulous senior engineer. ' +
-            'Return a JSON object that satisfies the provided schema — nothing else.'
+            'Return ONLY a JSON object that satisfies the provided schema.'
         },
         {
           role: 'user',
@@ -58,13 +58,18 @@ Diff under review:
 \`\`\`diff
 ${diff}
 \`\`\`
-If the code of this diff seems wrong, inconsistent or wrong syntax, return the JSON with a FAIL.`
+
+If the code of this diff seems wrong (incorrect logic, broken syntax, security issue, missing tests, etc.) respond with:
+\`\`\`json
+{ "verdict": "FAIL", "feedback": "<concise explanation (≈100 words max)>" }
+\`\`\`
+Otherwise respond with:
+\`\`\`json
+{ "verdict": "PASS" }
+\`\`\``
         }
       ],
-      response_format: {
-        type: 'json_schema',
-        json_schema: jsonSchema                       // <-- correct key & structure
-      }
+      response_format: { type: 'json_schema', json_schema: jsonSchema }
     });
 
     /* ---------------- inspect + act on reply ----------- */
@@ -72,12 +77,20 @@ If the code of this diff seems wrong, inconsistent or wrong syntax, return the J
     console.log(resp.choices[0].message.content);
     console.log('----RESPONSE END----');
 
-    const { verdict } = Verdict.parse(
+    const { verdict, feedback } = Verdict.parse(
       JSON.parse(resp.choices[0].message.content)
     );
 
     core.notice(`Model verdict: ${verdict}`);
-    console.log(`Model verdict: ${verdict}`);
+    if (feedback) {
+      core.error(`AI feedback: ${feedback}`);          // red annotation in log
+
+      // Also surface it nicely in the Summary tab
+      await core.summary
+        .addHeading('AI Review Feedback')
+        .addParagraph(feedback)
+        .write();
+    }
 
     if (verdict !== 'PASS') {
       core.setFailed('AI review failed.');
