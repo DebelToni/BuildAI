@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>User Stories – BuildAI Docs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;padding:0;
+  line-height:1.6;
+  background:#f8f9fa;
+  color:#212529;
+}
+header{
+  background:#343a40;
+  color:#fff;
+  padding:1rem;
+}
+footer{
+  background:#343a40;
+  color:#fff;
+  text-align:center;
+  padding:1rem;
+  margin-top:2rem;
+}
+.nav{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+}
+.nav li{
+  margin-right:1rem;
+}
+.nav a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.nav a:hover{
+  text-decoration:underline;
+}
+main{
+  padding:2rem;
+  max-width:960px;
+  margin:auto;
+  background:#fff;
+  box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
+pre{
+  background:#f1f3f5;
+  padding:1rem;
+  overflow-x:auto;
+}
+code{
+  font-family: Consolas,monospace;
+}
+h1,h2,h3{
+  color:#343a40;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border:1px solid #dee2e6;
+  padding:0.5rem;
+  text-align:left;
+}
+thead{
+  background:#e9ecef;
+}
+</style>
+
+</head>
+<body>
+<header>
+<h1>BuildAI Documentation</h1>
+
+<nav>
+  <ul class="nav">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="super-giant.html">SUPER‑GIANT</a></li>
+    <li><a href="lada.html">LADA</a></li>
+    <li><a href="deployment.html">Deployment</a></li>
+    <li><a href="usage.html">Usage</a></li>
+    <li><a href="api.html">API</a></li>
+    <li><a href="uat.html">UAT Examples</a></li>
+    <li><a href="user-stories.html">User Stories</a></li>
+    <li><a href="contributing.html">Contributing</a></li>
+  </ul>
+</nav>
+
+</header>
+<main>
+
+<h2>Core Functionality – User Stories</h2>
+
+<p>The following stories capture WHY each major feature exists, in the language of the people who use BuildAI.</p>
+
+<h3>Training Workflow</h3>
+<ul>
+<li><strong>Story T‑1</strong>: As an <em>ML researcher</em>, I want to start a new transformer training run with one CLI command so that I can iterate on model architectures quickly.</li>
+<li><strong>Story T‑2</strong>: As an <em>infra engineer</em>, I want training metrics pushed to Weights &amp; Biases so that I can monitor loss curves in real time.</li>
+</ul>
+
+<h3>Inference &amp; Serving</h3>
+<ul>
+<li><strong>Story I‑1</strong>: As a <em>product engineer</em>, I want a REST endpoint compatible with the OpenAI API so that I can swap BuildAI in place of GPT‑4 with minimal code changes.</li>
+<li><strong>Story I‑2</strong>: As a <em>researcher</em>, I want KV‑cache reuse across requests so that I can benchmark long‑context inference without restarting the model.</li>
+</ul>
+
+<h3>LADA – Developer Assistant</h3>
+<ul>
+<li><strong>Story L‑1</strong>: As a <em>developer</em>, I want to ask the assistant to refactor a function while seeing diffs inline so that I can accept or reject each change.</li>
+<li><strong>Story L‑2</strong>: As a <em>security‑conscious user</em>, I want to run LADA fully offline so that no proprietary code leaves my laptop.</li>
+<li><strong>Story L‑3</strong>: As a <em>project manager</em>, I want to see the assistant’s planning steps so that I can trust how it arrived at a solution.</li>
+</ul>
+
+<h3>Deployment &amp; Ops</h3>
+<ul>
+<li><strong>Story D‑1</strong>: As a <em>DevOps engineer</em>, I want a Terraform module that spins up GPU nodes on RunPod so that I can match capacity to demand.</li>
+<li><strong>Story D‑2</strong>: As an <em>open‑source contributor</em>, I want CI to run unit tests on every PR so that main stays green.</li>
+</ul>
+
+<h3>Extensibility</h3>
+<ul>
+<li><strong>Story E‑1</strong>: As a <em>plugin author</em>, I want a documented Python hook to register new model backends so that BuildAI can talk to my custom inference server.</li>
+<li><strong>Story E‑2</strong>: As a <em>researcher</em>, I want to swap the attention implementation without touching the training script so that I can benchmark experimental kernels.</li>
+</ul>
+
+</main>
+<footer>
+BuildAI Documentation – generated 2025-06-24
+</footer>
+</body>
+</html>

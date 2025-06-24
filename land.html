@@ -1,4 +1,302 @@
-
+<!---->
+<!-- <!DOCTYPE html> -->
+<!-- <html lang="en"> -->
+<!-- <head> -->
+<!-- <meta charset="UTF-8"> -->
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+<!-- <title>BUILD AI</title> -->
+<!-- <style> -->
+<!--   body { -->
+<!--     margin: 0; -->
+<!--     overflow: hidden; -->
+<!--     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); -->
+<!--     font-family: 'Arial', sans-serif; -->
+<!--     cursor: default; -->
+<!--   } -->
+<!---->
+<!--   .bubble-container { -->
+<!--     position: relative; -->
+<!--     width: 100vw; -->
+<!--     height: 100vh; -->
+<!--   } -->
+<!---->
+<!--   .bubble { -->
+<!--     position: absolute; -->
+<!--     border-radius: 50%; -->
+<!--     display: flex; -->
+<!--     justify-content: center; -->
+<!--     align-items: center; -->
+<!--     font-weight: bold; -->
+<!--     text-decoration: none; -->
+<!--     color: white; -->
+<!--     box-shadow:  -->
+<!--       0 0 20px rgba(255, 255, 255, 0.4),  -->
+<!--       0 0 40px rgba(255, 255, 255, 0.2), -->
+<!--       inset 0 0 20px rgba(255, 255, 255, 0.1); -->
+<!--     text-shadow: 0 0 10px rgba(0, 0, 0, 0.8); -->
+<!--     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); -->
+<!--     cursor: grab; -->
+<!--     user-select: none; -->
+<!--     backdrop-filter: blur(2px); -->
+<!--     border: 2px solid rgba(255, 255, 255, 0.2); -->
+<!--   } -->
+<!---->
+<!--   .bubble:hover { -->
+<!--     transform: scale(1.1); -->
+<!--     box-shadow:  -->
+<!--       0 0 30px rgba(255, 255, 255, 0.6),  -->
+<!--       0 0 60px rgba(255, 255, 255, 0.3), -->
+<!--       inset 0 0 30px rgba(255, 255, 255, 0.2); -->
+<!--   } -->
+<!---->
+<!--   .bubble:active { -->
+<!--     cursor: grabbing; -->
+<!--     transform: scale(0.95); -->
+<!--   } -->
+<!---->
+<!--   .bubble.dragging { -->
+<!--     cursor: grabbing; -->
+<!--     z-index: 1000; -->
+<!--     animation: none !important; -->
+<!--   } -->
+<!---->
+<!--   #lada { -->
+<!--     width: 200px; -->
+<!--     height: 200px; -->
+<!--     background: radial-gradient(circle at 30% 30%, #ff7e5f, #feb47b, #ff6b6b); -->
+<!--     animation: float 10s infinite ease-in-out, breathe 4s infinite ease-in-out; -->
+<!--     top: 20%; -->
+<!--     left: 10%; -->
+<!--     font-size: 2.5em; -->
+<!--   } -->
+<!---->
+<!--   #giant { -->
+<!--     width: 250px; -->
+<!--     height: 250px; -->
+<!--     background: radial-gradient(circle at 30% 30%, #00c6ff, #0072ff, #667eea); -->
+<!--     animation: float 12s infinite ease-in-out, breathe 5s infinite ease-in-out; -->
+<!--     top: 50%; -->
+<!--     left: 70%; -->
+<!--     font-size: 3em; -->
+<!--   } -->
+<!---->
+<!--   @keyframes float { -->
+<!--     0% { -->
+<!--       transform: translate(0, 0); -->
+<!--     } -->
+<!--     25% { -->
+<!--       transform: translate(30px, 50px); -->
+<!--     } -->
+<!--     50% { -->
+<!--       transform: translate(-40px, -20px); -->
+<!--     } -->
+<!--     75% { -->
+<!--       transform: translate(20px, -40px); -->
+<!--     } -->
+<!--     100% { -->
+<!--       transform: translate(0, 0); -->
+<!--     } -->
+<!--   } -->
+<!---->
+<!--   @keyframes breathe { -->
+<!--     0% { -->
+<!--       transform: scale(1); -->
+<!--     } -->
+<!--     50% { -->
+<!--       transform: scale(1.15); -->
+<!--     } -->
+<!--     100% { -->
+<!--       transform: scale(1); -->
+<!--     } -->
+<!--   } -->
+<!---->
+<!--   /* Particle effects */ -->
+<!--   .particle { -->
+<!--     position: absolute; -->
+<!--     width: 4px; -->
+<!--     height: 4px; -->
+<!--     background: rgba(255, 255, 255, 0.6); -->
+<!--     border-radius: 50%; -->
+<!--     pointer-events: none; -->
+<!--     animation: sparkle 3s infinite ease-in-out; -->
+<!--   } -->
+<!---->
+<!--   @keyframes sparkle { -->
+<!--     0%, 100% { -->
+<!--       opacity: 0; -->
+<!--       transform: scale(0); -->
+<!--     } -->
+<!--     50% { -->
+<!--       opacity: 1; -->
+<!--       transform: scale(1); -->
+<!--     } -->
+<!--   } -->
+<!-- </style> -->
+<!-- </head> -->
+<!-- <body> -->
+<!-- <div class="bubble-container"> -->
+<!--   <a href="http://localhost:5000" class="bubble" id="lada">LADA</a> -->
+<!--   <a href="http://localhost:5001" class="bubble" id="giant">GIANT</a> -->
+<!-- </div> -->
+<!---->
+<!-- <script> -->
+<!-- let isDragging = false; -->
+<!-- let currentBubble = null; -->
+<!-- let offset = { x: 0, y: 0 }; -->
+<!---->
+<!-- // Add particle effects -->
+<!-- function createParticle(x, y) { -->
+<!--   const particle = document.createElement('div'); -->
+<!--   particle.className = 'particle'; -->
+<!--   particle.style.left = x + 'px'; -->
+<!--   particle.style.top = y + 'px'; -->
+<!--   particle.style.animationDelay = Math.random() * 2 + 's'; -->
+<!--   document.body.appendChild(particle); -->
+<!---->
+<!--   setTimeout(() => { -->
+<!--     particle.remove(); -->
+<!--   }, 3000); -->
+<!-- } -->
+<!---->
+<!-- // Create ambient particles -->
+<!-- setInterval(() => { -->
+<!--   const x = Math.random() * window.innerWidth; -->
+<!--   const y = Math.random() * window.innerHeight; -->
+<!--   createParticle(x, y); -->
+<!-- }, 500); -->
+<!---->
+<!-- // Drag functionality -->
+<!-- document.querySelectorAll('.bubble').forEach(bubble => { -->
+<!--   let startX, startY, initialX, initialY; -->
+<!---->
+<!--   bubble.addEventListener('mousedown', (e) => { -->
+<!--     e.preventDefault(); -->
+<!--     isDragging = true; -->
+<!--     currentBubble = bubble; -->
+<!---->
+<!--     // Add dragging class -->
+<!--     bubble.classList.add('dragging'); -->
+<!---->
+<!--     // Get initial positions -->
+<!--     const rect = bubble.getBoundingClientRect(); -->
+<!--     startX = e.clientX; -->
+<!--     startY = e.clientY; -->
+<!--     initialX = rect.left; -->
+<!--     initialY = rect.top; -->
+<!---->
+<!--     // Calculate offset -->
+<!--     offset.x = e.clientX - rect.left; -->
+<!--     offset.y = e.clientY - rect.top; -->
+<!--   }); -->
+<!---->
+<!--   // Touch support for mobile -->
+<!--   bubble.addEventListener('touchstart', (e) => { -->
+<!--     e.preventDefault(); -->
+<!--     const touch = e.touches[0]; -->
+<!--     isDragging = true; -->
+<!--     currentBubble = bubble; -->
+<!---->
+<!--     bubble.classList.add('dragging'); -->
+<!---->
+<!--     const rect = bubble.getBoundingClientRect(); -->
+<!--     startX = touch.clientX; -->
+<!--     startY = touch.clientY; -->
+<!--     initialX = rect.left; -->
+<!--     initialY = rect.top; -->
+<!---->
+<!--     offset.x = touch.clientX - rect.left; -->
+<!--     offset.y = touch.clientY - rect.top; -->
+<!--   }); -->
+<!-- }); -->
+<!---->
+<!-- // Mouse move event -->
+<!-- document.addEventListener('mousemove', (e) => { -->
+<!--   if (isDragging && currentBubble) { -->
+<!--     const x = e.clientX - offset.x; -->
+<!--     const y = e.clientY - offset.y; -->
+<!---->
+<!--     // Keep bubbles within viewport -->
+<!--     const maxX = window.innerWidth - currentBubble.offsetWidth; -->
+<!--     const maxY = window.innerHeight - currentBubble.offsetHeight; -->
+<!---->
+<!--     const constrainedX = Math.max(0, Math.min(x, maxX)); -->
+<!--     const constrainedY = Math.max(0, Math.min(y, maxY)); -->
+<!---->
+<!--     currentBubble.style.left = constrainedX + 'px'; -->
+<!--     currentBubble.style.top = constrainedY + 'px'; -->
+<!---->
+<!--     // Create trail particles -->
+<!--     if (Math.random() < 0.3) { -->
+<!--       createParticle( -->
+<!--         constrainedX + currentBubble.offsetWidth / 2, -->
+<!--         constrainedY + currentBubble.offsetHeight / 2 -->
+<!--       ); -->
+<!--     } -->
+<!--   } -->
+<!-- }); -->
+<!---->
+<!-- // Touch move event -->
+<!-- document.addEventListener('touchmove', (e) => { -->
+<!--   if (isDragging && currentBubble) { -->
+<!--     e.preventDefault(); -->
+<!--     const touch = e.touches[0]; -->
+<!--     const x = touch.clientX - offset.x; -->
+<!--     const y = touch.clientY - offset.y; -->
+<!---->
+<!--     const maxX = window.innerWidth - currentBubble.offsetWidth; -->
+<!--     const maxY = window.innerHeight - currentBubble.offsetHeight; -->
+<!---->
+<!--     const constrainedX = Math.max(0, Math.min(x, maxX)); -->
+<!--     const constrainedY = Math.max(0, Math.min(y, maxY)); -->
+<!---->
+<!--     currentBubble.style.left = constrainedX + 'px'; -->
+<!--     currentBubble.style.top = constrainedY + 'px'; -->
+<!---->
+<!--     if (Math.random() < 0.3) { -->
+<!--       createParticle( -->
+<!--         constrainedX + currentBubble.offsetWidth / 2, -->
+<!--         constrainedY + currentBubble.offsetHeight / 2 -->
+<!--       ); -->
+<!--     } -->
+<!--   } -->
+<!-- }); -->
+<!---->
+<!-- // Mouse up event -->
+<!-- document.addEventListener('mouseup', () => { -->
+<!--   if (isDragging && currentBubble) { -->
+<!--     currentBubble.classList.remove('dragging'); -->
+<!--     isDragging = false; -->
+<!--     currentBubble = null; -->
+<!--   } -->
+<!-- }); -->
+<!---->
+<!-- // Touch end event -->
+<!-- document.addEventListener('touchend', () => { -->
+<!--   if (isDragging && currentBubble) { -->
+<!--     currentBubble.classList.remove('dragging'); -->
+<!--     isDragging = false; -->
+<!--     currentBubble = null; -->
+<!--   } -->
+<!-- }); -->
+<!---->
+<!-- // Prevent default drag behavior -->
+<!-- document.addEventListener('dragstart', (e) => { -->
+<!--   e.preventDefault(); -->
+<!-- }); -->
+<!---->
+<!-- // Add some dynamic breathing variation -->
+<!-- setInterval(() => { -->
+<!--   document.querySelectorAll('.bubble').forEach((bubble, index) => { -->
+<!--     if (!bubble.classList.contains('dragging')) { -->
+<!--       const variation = 0.05 + Math.random() * 0.1; -->
+<!--       const duration = 3 + Math.random() * 4; -->
+<!--       bubble.style.animationDuration = `10s, ${duration}s`; -->
+<!--     } -->
+<!--   }); -->
+<!-- }, 5000); -->
+<!-- </script> -->
+<!-- </body> -->
+<!-- </html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,6 +378,22 @@
     font-size: 3em;
   }
   
+  #docs {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle at 30% 30%, #a8e6cf, #7fcdcd, #81b3d3);
+    animation: fastFloat 6s infinite ease-in-out, quickBreath 2s infinite ease-in-out, drift 8s infinite linear;
+    top: 10%;
+    left: 45%;
+    font-size: 1.4em;
+    opacity: 0.9;
+  }
+  
+  #docs:hover {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  
   @keyframes float {
     0% {
       transform: translate(0, 0);
@@ -98,12 +412,63 @@
     }
   }
   
+  @keyframes fastFloat {
+    0% {
+      transform: translate(0, 0);
+    }
+    20% {
+      transform: translate(60px, 40px);
+    }
+    40% {
+      transform: translate(-30px, 80px);
+    }
+    60% {
+      transform: translate(40px, -30px);
+    }
+    80% {
+      transform: translate(-50px, 20px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes drift {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(100px);
+    }
+    50% {
+      transform: translateX(-80px);
+    }
+    75% {
+      transform: translateX(60px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
   @keyframes breathe {
     0% {
       transform: scale(1);
     }
     50% {
       transform: scale(1.15);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes quickBreath {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
     }
     100% {
       transform: scale(1);
@@ -131,12 +496,35 @@
       transform: scale(1);
     }
   }
+  
+  /* Special particles for docs bubble */
+  .docs-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(168, 230, 207, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: docsSparkle 2s infinite ease-in-out;
+  }
+  
+  @keyframes docsSparkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
 </style>
 </head>
 <body>
 <div class="bubble-container">
   <a href="http://localhost:5000" class="bubble" id="lada">LADA</a>
   <a href="http://localhost:5001" class="bubble" id="giant">GIANT</a>
+  <a href="buildai_docs/index.html" class="bubble" id="docs">DOCS</a>
 </div>
 
 <script>
@@ -158,12 +546,37 @@ function createParticle(x, y) {
   }, 3000);
 }
 
+// Special particle effect for docs bubble
+function createDocsParticle(x, y) {
+  const particle = document.createElement('div');
+  particle.className = 'docs-particle';
+  particle.style.left = x + 'px';
+  particle.style.top = y + 'px';
+  particle.style.animationDelay = Math.random() * 1 + 's';
+  document.body.appendChild(particle);
+  
+  setTimeout(() => {
+    particle.remove();
+  }, 2000);
+}
+
 // Create ambient particles
 setInterval(() => {
   const x = Math.random() * window.innerWidth;
   const y = Math.random() * window.innerHeight;
   createParticle(x, y);
 }, 500);
+
+// Create special particles around docs bubble
+setInterval(() => {
+  const docsBubble = document.getElementById('docs');
+  if (docsBubble && !docsBubble.classList.contains('dragging')) {
+    const rect = docsBubble.getBoundingClientRect();
+    const x = rect.left + rect.width/2 + (Math.random() - 0.5) * 100;
+    const y = rect.top + rect.height/2 + (Math.random() - 0.5) * 100;
+    createDocsParticle(x, y);
+  }
+}, 300);
 
 // Drag functionality
 document.querySelectorAll('.bubble').forEach(bubble => {
@@ -289,11 +702,46 @@ setInterval(() => {
   document.querySelectorAll('.bubble').forEach((bubble, index) => {
     if (!bubble.classList.contains('dragging')) {
       const variation = 0.05 + Math.random() * 0.1;
-      const duration = 3 + Math.random() * 4;
-      bubble.style.animationDuration = `10s, ${duration}s`;
+      let duration = 3 + Math.random() * 4;
+      
+      // Make docs bubble even more dynamic
+      if (bubble.id === 'docs') {
+        duration = 1.5 + Math.random() * 2;
+      }
+      
+      bubble.style.animationDuration = bubble.id === 'docs' ? 
+        `6s, ${duration}s, 8s` : `10s, ${duration}s`;
     }
   });
-}, 5000);
+}, 3000);
+
+// Extra movement for docs bubble
+setInterval(() => {
+  const docsBubble = document.getElementById('docs');
+  if (docsBubble && !docsBubble.classList.contains('dragging')) {
+    // Add slight random position adjustments
+    const currentLeft = parseInt(docsBubble.style.left) || 0;
+    const currentTop = parseInt(docsBubble.style.top) || 0;
+    
+    const randomX = (Math.random() - 0.5) * 20;
+    const randomY = (Math.random() - 0.5) * 20;
+    
+    // Keep within reasonable bounds
+    const maxX = window.innerWidth - docsBubble.offsetWidth;
+    const maxY = window.innerHeight - docsBubble.offsetHeight;
+    
+    const newX = Math.max(50, Math.min(currentLeft + randomX, maxX - 50));
+    const newY = Math.max(50, Math.min(currentTop + randomY, maxY - 50));
+    
+    docsBubble.style.transition = 'left 2s ease-in-out, top 2s ease-in-out';
+    docsBubble.style.left = newX + 'px';
+    docsBubble.style.top = newY + 'px';
+    
+    setTimeout(() => {
+      docsBubble.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+    }, 2000);
+  }
+}, 4000);
 </script>
 </body>
 </html>
