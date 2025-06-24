@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Architecture – BuildAI Docs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  margin:0;padding:0;
+  line-height:1.6;
+  background:#f8f9fa;
+  color:#212529;
+}
+header{
+  background:#343a40;
+  color:#fff;
+  padding:1rem;
+}
+footer{
+  background:#343a40;
+  color:#fff;
+  text-align:center;
+  padding:1rem;
+  margin-top:2rem;
+}
+.nav{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+}
+.nav li{
+  margin-right:1rem;
+}
+.nav a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+}
+.nav a:hover{
+  text-decoration:underline;
+}
+main{
+  padding:2rem;
+  max-width:1200px;
+  margin:auto;
+  background:#fff;
+  box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
+svg text{
+  font-size:14px;
+  fill:#fff;
+  pointer-events:none;
+}
+.box{
+  fill:#0d6efd;
+  stroke:#083e8d;
+  stroke-width:1;
+  rx:6; ry:6;
+}
+.group{
+  fill:#6c757d;
+  stroke:#495057;
+  stroke-width:1;
+  rx:8; ry:8;
+  opacity:0.12;
+}
+.arrow{
+  stroke:#495057;
+  stroke-width:1.5;
+  marker-end:url(#arrow);
+}
+</style>
+</head>
+<body>
+<header>
+<h1>BuildAI Documentation</h1>
+<nav>
+  <ul class="nav">
+    <li><a href="index.html">Overview</a></li>
+    <li><a href="architecture.html">Architecture</a></li>
+    <li><a href="super-giant.html">SUPER‑GIANT</a></li>
+    <li><a href="lada.html">LADA</a></li>
+    <li><a href="deployment.html">Deployment</a></li>
+    <li><a href="usage.html">Usage</a></li>
+    <li><a href="api.html">API</a></li>
+    <li><a href="uat.html">UAT Examples</a></li>
+    <li><a href="user-stories.html">User Stories</a></li>
+    <li><a href="contributing.html">Contributing</a></li>
+  </ul>
+</nav>
+</header>
+<main>
+<h2>High‑level Architecture</h2>
+<p>The diagram below visualises the three main layers of <strong>BuildAI</strong>: the <em>meta‑server</em>, the <em>LADA</em> coding assistant service, and the <em>SUPER‑GIANT</em> model‑training stack. Hover elements for a short description; click to jump to deeper docs.</p>
+
+<!-- ARCHITECTURE DIAGRAM -->
+<svg width="100%" height="620" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,4 L0,8 z" fill="#495057" />
+    </marker>
+  </defs>
+
+  <!-- BuildAI root server -->
+  <a xlink:href="index.html">
+    <rect x="410" y="20" width="180" height="40" class="box"/>
+    <text x="500" y="46" text-anchor="middle">BuildAI Meta‑Server</text>
+    <title>Docker‑ised Flask API that stitches sub‑projects together and exposes a unified REST surface.</title>
+  </a>
+
+  <!-- CONNECTOR lines to sub projects groups -->
+  <line x1="500" y1="60" x2="500" y2="120" class="arrow" />
+
+  <!-- LADA group container -->
+  <rect x="40" y="120" width="420" height="440" class="group"/>
+  <text x="250" y="145" text-anchor="middle" fill="#212529" font-weight="bold">LADA – Local AI Developer Assistant</text>
+
+  <!-- LADA components -->
+  <a xlink:href="lada.html">
+    <rect x="70" y="180" width="360" height="40" class="box"/>
+    <text x="250" y="206" text-anchor="middle">Flask Server (app.py)</text>
+    <title>Heavyweight Flask server orchestrating requests, routing, and function‑calling.</title>
+  </a>
+  <rect x="90" y="240" width="140" height="40" class="box" />
+  <text x="160" y="266" text-anchor="middle">Router Model</text>
+  <title>Lightweight LLM that triages each prompt.</title>
+  <rect x="270" y="240" width="140" height="40" class="box" />
+  <text x="340" y="266" text-anchor="middle">Coder Model(s)</text>
+  <title>Fast code‑gen models selected per task.</title>
+  <rect x="180" y="310" width="200" height="40" class="box" />
+  <text x="280" y="336" text-anchor="middle">Orchestrator Model</text>
+  <title>Large‑context planner LLM that can spawn parallel coders.</title>
+  <rect x="130" y="380" width="300" height="40" class="box" />
+  <text x="280" y="406" text-anchor="middle">LLM Providers (Ollama / OpenAI)</text>
+  <title>Abstract provider layer – easily swap between local engines or remote APIs.</title>
+  <rect x="90" y="450" width="320" height="40" class="box" />
+  <text x="250" y="476" text-anchor="middle">Web UI (chat ⌁ terminal)</text>
+  <title>Single‑page app that exposes chat and optional terminal view.</title>
+
+  <!-- arrows inside LADA -->
+  <line x1="160" y1="220" x2="160" y2="240" class="arrow"/>
+  <line x1="340" y1="220" x2="340" y2="240" class="arrow"/>
+  <line x1="280" y1="280" x2="280" y2="310" class="arrow"/>
+  <line x1="280" y1="350" x2="280" y2="380" class="arrow"/>
+  <line x1="250" y1="420" x2="250" y2="450" class="arrow"/>
+
+  <!-- SUPER-GIANT group container -->
+  <rect x="540" y="120" width="420" height="440" class="group"/>
+  <text x="750" y="145" text-anchor="middle" fill="#212529" font-weight="bold">SUPER‑GIANT – LLM Research Stack</text>
+
+  <!-- SUPER GIANT components -->
+  <a xlink:href="super-giant.html">
+    <rect x="570" y="180" width="360" height="40" class="box"/>
+    <text x="750" y="206" text-anchor="middle">JAX Model (v1)</text>
+    <title>Decoder‑only transformer implemented in JAX/Flax.</title>
+  </a>
+  <rect x="590" y="240" width="320" height="40" class="box" />
+  <text x="750" y="266" text-anchor="middle">Training Loop + Optax</text>
+  <title>Gradient accumulation, AMP, distributed support.</title>
+  <rect x="610" y="300" width="280" height="40" class="box" />
+  <text x="750" y="326" text-anchor="middle">Synthetic Data Pipeline</text>
+  <title>Generates instruction / conversation data via teacher models.</title>
+  <rect x="630" y="360" width="240" height="40" class="box" />
+  <text x="750" y="386" text-anchor="middle">Inference Server</text>
+  <title>Provides REST / WebSocket endpoints with KV‑cache & Flash Attention.</title>
+  <rect x="650" y="420" width="200" height="40" class="box" />
+  <text x="750" y="446" text-anchor="middle">Research UI + Dashboard</text>
+  <title>Lightweight front‑end for live metrics and prompts.</title>
+  <rect x="610" y="480" width="280" height="40" class="box" />
+  <text x="750" y="506" text-anchor="middle">terra/ (RunPod Terraform)</text>
+  <title>Wrapper around RunPod CLI for GPU node provisioning.</title>
+
+  <!-- internal arrows SG -->
+  <line x1="750" y1="220" x2="750" y2="240" class="arrow"/>
+  <line x1="750" y1="280" x2="750" y2="300" class="arrow"/>
+  <line x1="750" y1="340" x2="750" y2="360" class="arrow"/>
+  <line x1="750" y1="400" x2="750" y2="420" class="arrow"/>
+
+  <!-- Horizontal arrows between sub‑projects and meta‑server -->
+  <line x1="500" y1="120" x2="250" y2="120" class="arrow"/>
+  <line x1="500" y1="120" x2="750" y2="120" class="arrow"/>
+  <title>REST / gRPC calls stitched by the meta‑server.</title>
+</svg>
+
+<h3>Data‑flow at a glance</h3>
+<ul>
+  <li><strong>BuildAI Meta‑Server</strong> exposes a unified REST surface that proxies to either the LADA coding API or the SUPER‑GIANT inference/training endpoints.</li>
+  <li><strong>LADA</strong> sends generation requests to local or remote models using the OpenAI protocol, enabling both privacy‑first workflows and cloud fall‑backs.</li>
+  <li><strong>SUPER‑GIANT</strong> can query LADA‑managed teacher models to produce synthetic training data – closing the RL/SFT loop.</li>
+  <li>Both subsystems package their own lightweight UIs but can also be driven headlessly via the Meta‑Server.</li>
+</ul>
+</main>
+<footer>
+BuildAI Documentation – generated 2025‑06‑24
+</footer>
+</body>
+</html>
