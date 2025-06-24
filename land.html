@@ -1,5 +1,3 @@
-This IS NOT VALID CODE
-<!---->
 <!-- <!DOCTYPE html> -->
 <!-- <html lang="en"> -->
 <!-- <head> -->
@@ -81,6 +79,22 @@ This IS NOT VALID CODE
 <!--     font-size: 3em; -->
 <!--   } -->
 <!---->
+<!--   #docs { -->
+<!--     width: 120px; -->
+<!--     height: 120px; -->
+<!--     background: radial-gradient(circle at 30% 30%, #a8e6cf, #7fcdcd, #81b3d3); -->
+<!--     animation: fastFloat 6s infinite ease-in-out, quickBreath 2s infinite ease-in-out, drift 8s infinite linear; -->
+<!--     top: 10%; -->
+<!--     left: 45%; -->
+<!--     font-size: 1.4em; -->
+<!--     opacity: 0.9; -->
+<!--   } -->
+<!---->
+<!--   #docs:hover { -->
+<!--     opacity: 1; -->
+<!--     transform: scale(1.2); -->
+<!--   } -->
+<!---->
 <!--   @keyframes float { -->
 <!--     0% { -->
 <!--       transform: translate(0, 0); -->
@@ -99,12 +113,63 @@ This IS NOT VALID CODE
 <!--     } -->
 <!--   } -->
 <!---->
+<!--   @keyframes fastFloat { -->
+<!--     0% { -->
+<!--       transform: translate(0, 0); -->
+<!--     } -->
+<!--     20% { -->
+<!--       transform: translate(60px, 40px); -->
+<!--     } -->
+<!--     40% { -->
+<!--       transform: translate(-30px, 80px); -->
+<!--     } -->
+<!--     60% { -->
+<!--       transform: translate(40px, -30px); -->
+<!--     } -->
+<!--     80% { -->
+<!--       transform: translate(-50px, 20px); -->
+<!--     } -->
+<!--     100% { -->
+<!--       transform: translate(0, 0); -->
+<!--     } -->
+<!--   } -->
+<!---->
+<!--   @keyframes drift { -->
+<!--     0% { -->
+<!--       transform: translateX(0); -->
+<!--     } -->
+<!--     25% { -->
+<!--       transform: translateX(100px); -->
+<!--     } -->
+<!--     50% { -->
+<!--       transform: translateX(-80px); -->
+<!--     } -->
+<!--     75% { -->
+<!--       transform: translateX(60px); -->
+<!--     } -->
+<!--     100% { -->
+<!--       transform: translateX(0); -->
+<!--     } -->
+<!--   } -->
+<!---->
 <!--   @keyframes breathe { -->
 <!--     0% { -->
 <!--       transform: scale(1); -->
 <!--     } -->
 <!--     50% { -->
 <!--       transform: scale(1.15); -->
+<!--     } -->
+<!--     100% { -->
+<!--       transform: scale(1); -->
+<!--     } -->
+<!--   } -->
+<!---->
+<!--   @keyframes quickBreath { -->
+<!--     0% { -->
+<!--       transform: scale(1); -->
+<!--     } -->
+<!--     50% { -->
+<!--       transform: scale(1.1); -->
 <!--     } -->
 <!--     100% { -->
 <!--       transform: scale(1); -->
@@ -132,12 +197,35 @@ This IS NOT VALID CODE
 <!--       transform: scale(1); -->
 <!--     } -->
 <!--   } -->
+<!---->
+<!--   /* Special particles for docs bubble */ -->
+<!--   .docs-particle { -->
+<!--     position: absolute; -->
+<!--     width: 3px; -->
+<!--     height: 3px; -->
+<!--     background: rgba(168, 230, 207, 0.8); -->
+<!--     border-radius: 50%; -->
+<!--     pointer-events: none; -->
+<!--     animation: docsSparkle 2s infinite ease-in-out; -->
+<!--   } -->
+<!---->
+<!--   @keyframes docsSparkle { -->
+<!--     0%, 100% { -->
+<!--       opacity: 0; -->
+<!--       transform: scale(0) rotate(0deg); -->
+<!--     } -->
+<!--     50% { -->
+<!--       opacity: 1; -->
+<!--       transform: scale(1.2) rotate(180deg); -->
+<!--     } -->
+<!--   } -->
 <!-- </style> -->
 <!-- </head> -->
 <!-- <body> -->
 <!-- <div class="bubble-container"> -->
 <!--   <a href="http://localhost:5000" class="bubble" id="lada">LADA</a> -->
 <!--   <a href="http://localhost:5001" class="bubble" id="giant">GIANT</a> -->
+<!--   <a href="buildai_docs/index.html" class="bubble" id="docs">DOCS</a> -->
 <!-- </div> -->
 <!---->
 <!-- <script> -->
@@ -159,12 +247,37 @@ This IS NOT VALID CODE
 <!--   }, 3000); -->
 <!-- } -->
 <!---->
+<!-- // Special particle effect for docs bubble -->
+<!-- function createDocsParticle(x, y) { -->
+<!--   const particle = document.createElement('div'); -->
+<!--   particle.className = 'docs-particle'; -->
+<!--   particle.style.left = x + 'px'; -->
+<!--   particle.style.top = y + 'px'; -->
+<!--   particle.style.animationDelay = Math.random() * 1 + 's'; -->
+<!--   document.body.appendChild(particle); -->
+<!---->
+<!--   setTimeout(() => { -->
+<!--     particle.remove(); -->
+<!--   }, 2000); -->
+<!-- } -->
+<!---->
 <!-- // Create ambient particles -->
 <!-- setInterval(() => { -->
 <!--   const x = Math.random() * window.innerWidth; -->
 <!--   const y = Math.random() * window.innerHeight; -->
 <!--   createParticle(x, y); -->
 <!-- }, 500); -->
+<!---->
+<!-- // Create special particles around docs bubble -->
+<!-- setInterval(() => { -->
+<!--   const docsBubble = document.getElementById('docs'); -->
+<!--   if (docsBubble && !docsBubble.classList.contains('dragging')) { -->
+<!--     const rect = docsBubble.getBoundingClientRect(); -->
+<!--     const x = rect.left + rect.width/2 + (Math.random() - 0.5) * 100; -->
+<!--     const y = rect.top + rect.height/2 + (Math.random() - 0.5) * 100; -->
+<!--     createDocsParticle(x, y); -->
+<!--   } -->
+<!-- }, 300); -->
 <!---->
 <!-- // Drag functionality -->
 <!-- document.querySelectorAll('.bubble').forEach(bubble => { -->
@@ -290,14 +403,48 @@ This IS NOT VALID CODE
 <!--   document.querySelectorAll('.bubble').forEach((bubble, index) => { -->
 <!--     if (!bubble.classList.contains('dragging')) { -->
 <!--       const variation = 0.05 + Math.random() * 0.1; -->
-<!--       const duration = 3 + Math.random() * 4; -->
-<!--       bubble.style.animationDuration = `10s, ${duration}s`; -->
+<!--       let duration = 3 + Math.random() * 4; -->
+<!---->
+<!--       // Make docs bubble even more dynamic -->
+<!--       if (bubble.id === 'docs') { -->
+<!--         duration = 1.5 + Math.random() * 2; -->
+<!--       } -->
+<!---->
+<!--       bubble.style.animationDuration = bubble.id === 'docs' ?  -->
+<!--         `6s, ${duration}s, 8s` : `10s, ${duration}s`; -->
 <!--     } -->
 <!--   }); -->
-<!-- }, 5000); -->
+<!-- }, 3000); -->
+<!---->
+<!-- // Extra movement for docs bubble -->
+<!-- setInterval(() => { -->
+<!--   const docsBubble = document.getElementById('docs'); -->
+<!--   if (docsBubble && !docsBubble.classList.contains('dragging')) { -->
+<!--     // Add slight random position adjustments -->
+<!--     const currentLeft = parseInt(docsBubble.style.left) || 0; -->
+<!--     const currentTop = parseInt(docsBubble.style.top) || 0; -->
+<!---->
+<!--     const randomX = (Math.random() - 0.5) * 20; -->
+<!--     const randomY = (Math.random() - 0.5) * 20; -->
+<!---->
+<!--     // Keep within reasonable bounds -->
+<!--     const maxX = window.innerWidth - docsBubble.offsetWidth; -->
+<!--     const maxY = window.innerHeight - docsBubble.offsetHeight; -->
+<!---->
+<!--     const newX = Math.max(50, Math.min(currentLeft + randomX, maxX - 50)); -->
+<!--     const newY = Math.max(50, Math.min(currentTop + randomY, maxY - 50)); -->
+<!---->
+<!--     docsBubble.style.transition = 'left 2s ease-in-out, top 2s ease-in-out'; -->
+<!--     docsBubble.style.left = newX + 'px'; -->
+<!--     docsBubble.style.top = newY + 'px'; -->
+<!---->
+<!--     setTimeout(() => { -->
+<!--       docsBubble.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)'; -->
+<!--     }, 2000); -->
+<!--   } -->
+<!-- }, 4000); -->
 <!-- </script> -->
 <!-- </body> -->
-<!-- </html> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -393,6 +540,72 @@ This IS NOT VALID CODE
   #docs:hover {
     opacity: 1;
     transform: scale(1.2);
+  }
+  
+  /* Star Wars crawl styles */
+  .crawl-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    perspective: 300px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 500;
+  }
+  
+  .crawl {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 80%;
+    max-width: 600px;
+    transform: translateX(-50%) rotateX(25deg);
+    transform-origin: 50% 100%;
+    animation: crawl 20s linear infinite;
+    color: #ffd700;
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.4;
+    text-shadow: 
+      2px 2px 0px #000,
+      4px 4px 10px rgba(0, 0, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.5);
+    letter-spacing: 2px;
+  }
+  
+  @keyframes crawl {
+    0% {
+      top: 100%;
+      transform: translateX(-50%) rotateX(25deg) scale(1);
+      opacity: 1;
+    }
+    10% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      top: -50%;
+      transform: translateX(-50%) rotateX(25deg) scale(0.1);
+      opacity: 0;
+    }
+  }
+  
+  /* Add a subtle vignette effect for the crawl */
+  .crawl-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.3) 70%);
+    pointer-events: none;
   }
   
   @keyframes float {
@@ -519,6 +732,21 @@ This IS NOT VALID CODE
       transform: scale(1.2) rotate(180deg);
     }
   }
+
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .crawl {
+      font-size: 1.8em;
+      width: 90%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .crawl {
+      font-size: 1.4em;
+      width: 95%;
+    }
+  }
 </style>
 </head>
 <body>
@@ -526,6 +754,16 @@ This IS NOT VALID CODE
   <a href="http://localhost:5000" class="bubble" id="lada">LADA</a>
   <a href="http://localhost:5001" class="bubble" id="giant">GIANT</a>
   <a href="buildai_docs/index.html" class="bubble" id="docs">DOCS</a>
+</div>
+
+<!-- Star Wars Crawl -->
+<div class="crawl-container">
+  <div class="crawl">
+    Prepare yourselves<br>
+    for the greatest AI<br>
+    slop you have ever<br>
+    seen.....
+  </div>
 </div>
 
 <script>
@@ -746,3 +984,4 @@ setInterval(() => {
 </script>
 </body>
 </html>
+<!-- </html> -->
